@@ -11,7 +11,7 @@ public class Main {
 
         while (true) {
             Scanner inputExpression = new Scanner(System.in);
-            System.out.println("Введите выражение или введите Exit: ");
+            System.out.println("Введите выражение: ");
             expression = inputExpression.nextLine().split(" ");
             System.out.println(calc(expression));
         }
@@ -36,6 +36,9 @@ public class Main {
                 break;
             case "/":
                 result = firstNumber / secondNumber;
+                break;
+            default:
+                System.out.println("Неверный оператор");
                 break;
         }
         return result;
