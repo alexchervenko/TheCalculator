@@ -14,6 +14,7 @@ public class Main {
             System.out.println("Введите выражение: ");
             expression = inputExpression.nextLine().split(" ");
             System.out.println(calc(expression));
+
         }
     }
 
@@ -44,14 +45,51 @@ public class Main {
         return result;
     }
 
+        public static String arabicToRoman (final int number){
+            if (number < 0 || 101 <= number) {
+                throw new IllegalArgumentException();
+            }
+            int numeric;
+            int numCounter = 0;
+            String[] romans = {"I", "V", "X", "L", "C", "D", "M"};
+            StringBuilder resultString = new StringBuilder();
+            String finalString = "";
+            String numberInString = String.valueOf(number);
+            for (int i = numberInString.length() - 1; i >= 0; i--) {
+                resultString.delete(0, resultString.length());
+                numeric = Integer.parseInt(numberInString.substring(i, i + 1));
+                if (1 <= numeric && numeric < 4) {
+                    for (int j = 0; j < numeric; j++) {
+                        resultString.append(romans[numCounter]);
+                    }
+                    numCounter += 2;
+                } else if (4 <= numeric && numeric < 9) {
+                    numCounter += 2;
+                    if (numeric == 4) {
+                        resultString.append(romans[numCounter - 2]);
+                    }
+                    resultString.append(romans[numCounter - 1]);
+                    for (int j = 0; j < (numeric - 5); j++) {
+                        resultString.append(romans[numCounter-2]);
+                    }
+                } else if (numeric == 9){
+                    numCounter +=2;
+                    resultString.append(romans[numCounter - 2] + romans[numCounter]);
+                } else if (numeric == 0) {
+                    numCounter += 2;
+                }
+                finalString = resultString.append(finalString).toString();
+            }
+            return finalString;
+        }
+
     public static String calc(String[] expression) {
         int firstNumber;
         int secondNumber;
         int result;
-        String[] romanNumbers = {"0", "I", "II", "III", "IV",
+        String[] romanNumbers = {"", "I", "II", "III", "IV",
                                  "V", "VI", "VII", "VIII", "IX",
-                                 "X", "XI", "XII", "XIII", "XIV",
-                                  "XV", "XVI", "XVII", "XVIII", "XIX", "XX"};
+                                 "X"};
 
         if (expression.length > 3) {
             throw new RuntimeException("Формат математической операции не удовлетворяет заданию - два операнда и один оператор (+, -, /, *)");
@@ -59,15 +97,15 @@ public class Main {
             throw new RuntimeException("Строка не является математической операцией");
         }
 
-
         if (Arrays.asList(romanNumbers).contains(expression[0]) && Arrays.asList(romanNumbers).contains(expression[2])) {
             firstNumber = Arrays.asList(romanNumbers).indexOf(expression[0]);
             secondNumber = Arrays.asList(romanNumbers).indexOf(expression[2]);
             result = calculateNumbers(firstNumber, secondNumber, expression[1]);
+
             if (result < 0) {
                 throw new RuntimeException("В римской системе нет отрицательных чисел.");
             }
-            return romanNumbers[result];
+            return arabicToRoman(result);
         } else if (!Arrays.asList(romanNumbers).contains(expression[0]) && !Arrays.asList(romanNumbers).contains(expression[2])) {
             return String.valueOf(calculateNumbers(Integer.parseInt(expression[0]), Integer.parseInt(expression[2]), expression[1]));
         } else {
@@ -76,5 +114,4 @@ public class Main {
     }
 
 
-
-}
+    }
